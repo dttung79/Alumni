@@ -3,7 +3,6 @@ from werkzeug.utils import secure_filename
 import hashlib
 import os
 from gen_invite import create_invitation
-import os
 
 app = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
