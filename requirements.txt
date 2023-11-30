@@ -3,5 +3,5 @@ werkzeug==2.1.2
 requests==2.28.2
 bs4
 opencv-python==4.8.1.78
-numpy==1.22.3
+numpy==1.21.6
 PIL==8.4.0
