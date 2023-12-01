@@ -60,7 +60,7 @@ def clear():
     delete_files('static/alumni')
     delete_files('static/uploads')
     delete_files('static/invite')
-    return 'All files deleted'
+    return 'All files are deleted'
 
 def delete_files(folder):
     for filename in os.listdir(folder):
