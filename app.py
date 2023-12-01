@@ -32,7 +32,7 @@ def submit_alumni():
         return 'No selected file', 400
     
     if photo_file:
-        filename = save_photo(photo_file)
+        filename = save_photo(photo_file, name, email)
 
     save_data(name, email, alumni, major, facebook, filename)
     invitation_file = create_invitation(filename, name)
@@ -83,9 +83,10 @@ def save_data(name, email, alumni, major, facebook, filename):
         f.write(facebook + '\n')
         f.write(filename.split('/')[-1])
 
-def save_photo(photo_file):
+def save_photo(photo_file, name, email):
     ext = photo_file.filename.split('.')[-1]
     filename = secure_filename(photo_file.filename)
+    filename += name + email
     filename = hashlib.md5(filename.encode()).hexdigest()
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'], filename + '.' + ext)
     photo_file.save(full_filename)

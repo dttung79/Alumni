@@ -84,7 +84,7 @@ input[type=submit]:hover {
                 // Generate and append table header
                 const thead = document.createElement('thead');
                 const headerRow = document.createElement('tr');
-                const headers = ['Name', 'Year', 'Major', 'Facebook', 'Image'];
+                const headers = ['#', 'Name', 'Year', 'Major', 'Facebook', 'Image'];
 
                 headers.forEach(headerText => {
                     const th = document.createElement('th');
@@ -96,9 +96,13 @@ input[type=submit]:hover {
                 table.appendChild(thead);
 
                 // Generate and append table rows
-                data.slice(start, end).forEach(row => {
+                data.slice(start, end).forEach((row, index) => {
                     const tr = document.createElement('tr');
                     const [name, email, year, major, fb, image] = row;
+
+                    const tdNumber = document.createElement('td');
+                    tdNumber.textContent = start + index + 1;
+                    tr.appendChild(tdNumber);
 
                     const tdName = document.createElement('td');
                     tdName.textContent = name;
@@ -136,8 +140,32 @@ input[type=submit]:hover {
                 });
             }
 
+            // Function to handle pagination buttons
+            function handlePaginationButtons() {
+                const prevButton = document.getElementById('prev-button');
+                const nextButton = document.getElementById('next-button');
+
+                prevButton.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        displayPage(currentPage);
+                    }
+                });
+
+                nextButton.addEventListener('click', () => {
+                    const totalPages = Math.ceil(data.length / rowsPerPage);
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        displayPage(currentPage);
+                    }
+                });
+            }
+
             // Display the first page
             displayPage(currentPage);
+
+            // Handle pagination buttons
+            handlePaginationButtons();
         });
 </script>
 
@@ -173,6 +201,26 @@ input[type=submit]:hover {
         text-decoration: none;
         color: rgba(182, 214, 157, 0.943);
     }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination button {
+        background-color: #5A869B;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        margin: 0 4px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .pagination button:hover {
+        background-color: #45788e;
+    }
 </style>
 <title>Alumni Homecoming 2023</title>
 </head>
@@ -181,6 +229,10 @@ input[type=submit]:hover {
 <img src="/static/banner.png" alt="Alumni Homecoming Banner" class="header-image">
 <h1 style="text-align: center; color: white;">Danh sách cựu sinh viên | <a href="/register">Đăng ký</a></h1>
 <table id="data-table"></table>
+<div class="pagination">
+    <button id="prev-button">Prev</button>
+    <button id="next-button">Next</button>
+</div>
 <h1 style="text-align: center; color: white;">Hẹn gặp lại các bạn!</h1>
 </body>
 </html>
