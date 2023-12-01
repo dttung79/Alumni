@@ -97,7 +97,7 @@ function validateForm() {
 <img src="/static/banner.png" alt="Alumni Homecoming Banner" class="header-image">
 
 <div class="form-container">
-  <form action="/submit_alumni" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+  <form action="/submit_alumni" id="form-register" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
     <label for="name" style="color: white;">Họ và tên</label>
     <input type="text" id="name" name="name" placeholder="Your name..">
 

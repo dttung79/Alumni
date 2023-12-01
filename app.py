@@ -35,9 +35,11 @@ def submit_alumni():
         filename = save_photo(photo_file, name, email)
 
     save_data(name, email, alumni, major, facebook, filename)
-    invitation_file = create_invitation(filename, name)
-    
-    return gen_invitation(invitation_file)
+    try:
+        invitation_file = create_invitation(filename, name)
+        return gen_invitation(invitation_file)
+    except Exception as e:
+        return render_template('error.html', error='No face detected in the portrait image.')
 
 @app.route('/all')
 def all():
