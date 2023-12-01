@@ -20,23 +20,22 @@ def register():
 def submit_alumni():
     # check if file is too large
     if request.content_length > app.config['MAX_CONTENT_LENGTH']:
-        return 'File is too large', 413
+        return render_template('error.html', error='File is too large. Maximum file size is 5MB.')
     # get form data
     name, email, alumni, major, facebook = get_form_data()
     # check if photo part is in the request
     if 'photo' not in request.files:
-        return 'No photo part', 400
+        return render_template('error.html', error='No photo part in the request.')
     photo_file = request.files['photo']
     # check if photo part is empty
     if photo_file.filename == '':
-        return 'No selected file', 400
+        return render_template('error.html', error='No selected file.')
     
     if photo_file:
         filename = save_photo(photo_file, name, email)
-
-    save_data(name, email, alumni, major, facebook, filename)
     try:
         invitation_file = create_invitation(filename, name)
+        save_data(name, email, alumni, major, facebook, filename)
         return gen_invitation(invitation_file)
     except Exception as e:
         return render_template('error.html', error='No face detected in the portrait image.')
