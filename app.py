@@ -40,7 +40,6 @@ def submit_alumni():
     return gen_invitation(invitation_file)
 
 @app.route('/all')
-
 def all():
     alumni_folder = 'static/alumni'
     student_info = []
@@ -55,7 +54,19 @@ def all():
                 student_info.append(content)
 
     return jsonify(student_info)
+@app.route('/clear')
+def clear():
+    # delete all files in the alumni folder
+    delete_files('static/alumni')
+    delete_files('static/uploads')
+    delete_files('static/invite')
+    return 'All files deleted'
 
+def delete_files(folder):
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
 def gen_invitation(filename):
     # build a html page with the invitation
     content = render_template('invite.html', filename=filename)
