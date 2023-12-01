@@ -47,7 +47,8 @@ def all():
     # Iterate over each file in the alumni folder
     for filename in os.listdir(alumni_folder):
         file_path = os.path.join(alumni_folder, filename)
-        if os.path.isfile(file_path):
+        # Check if the file is a file (not a folder) and skip .file files
+        if os.path.isfile(file_path) and not filename.startswith('.'):
             with open(file_path, 'r') as file:
                 # Read the content of the file and append it to the student_info list
                 content = file.read().splitlines()
