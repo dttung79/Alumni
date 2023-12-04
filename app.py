@@ -66,6 +66,16 @@ def clear():
     delete_files('static/invite')
     return 'All files are deleted'
 
+@app.route('/static/alumni/')
+def static_alumni():
+    # return all files in the alumni folder
+    files = []
+    for f in os.listdir('static/alumni'):
+        if f == 'keep':
+            continue
+        files.append(f)
+    return jsonify(files)
+
 def delete_files(folder):
     for filename in os.listdir(folder):
         if filename == 'keep':
