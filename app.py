@@ -66,6 +66,8 @@ def clear():
 
 def delete_files(folder):
     for filename in os.listdir(folder):
+        if filename == 'keep':
+            break
         file_path = os.path.join(folder, filename)
         if os.path.isfile(file_path) and not filename.startswith('.'):
             os.remove(file_path)
@@ -86,6 +88,9 @@ def save_data(name, email, alumni, major, facebook, filename):
 
 def save_photo(photo_file, name, email):
     ext = photo_file.filename.split('.')[-1]
+    # check extension
+    if ext.lower() not in ['jpg', 'jpeg', 'png', 'bmp', '.svg']:
+        return render_template('error.html', error='Only jpg, jpeg, png, bmp and svg files are allowed.')
     filename = secure_filename(photo_file.filename)
     filename += name + email
     filename = hashlib.md5(filename.encode()).hexdigest()
