@@ -78,7 +78,7 @@ def clear_file(filename):
     for f in os.listdir('static/invite'):
         if f.startswith(filename):
             os.remove(f'static/invite/{f}')
-
+    return 'File is deleted'
 @app.route('/static/alumni/list')
 def static_alumni():
     # return all files in the alumni folder
