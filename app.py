@@ -76,6 +76,15 @@ def static_alumni():
         files.append(f)
     return jsonify(files)
 
+@app.route('/static/uploads/')
+def static_uploads():
+    # return all files in the uploads folder
+    files = []
+    for f in os.listdir('static/uploads'):
+        files.append(f)
+    return jsonify(files)
+
+@app.route('/static/invite/')
 def delete_files(folder):
     for filename in os.listdir(folder):
         if filename == 'keep':
@@ -83,6 +92,7 @@ def delete_files(folder):
         file_path = os.path.join(folder, filename)
         if os.path.isfile(file_path) and not filename.startswith('.'):
             os.remove(file_path)
+
 def gen_invitation(filename):
     # build a html page with the invitation
     content = render_template('invite.html', filename=filename)
