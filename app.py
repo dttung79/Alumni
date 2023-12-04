@@ -48,7 +48,7 @@ def all():
     # Iterate over each file in the alumni folder
     for filename in os.listdir(alumni_folder):
         if filename == 'keep':
-            break
+            continue
         file_path = os.path.join(alumni_folder, filename)
         # Check if the file is a file (not a folder) and skip .file files
         if os.path.isfile(file_path) and not filename.startswith('.'):
