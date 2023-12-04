@@ -66,7 +66,20 @@ def clear():
     delete_files('static/invite')
     return 'All files are deleted'
 
-@app.route('/static/alumni/')
+@app.route('/clear/<filename>')
+def clear_file(filename):
+    # delete the file with the given filename in the alumni folder
+    os.remove(f'static/alumni/{filename}.txt')
+    # delete the file with the given filename no matter what extension in the uploads folder
+    for f in os.listdir('static/uploads'):
+        if f.startswith(filename):
+            os.remove(f'static/uploads/{f}')
+    # delete the file with the given filename no matter what extension in the invite folder
+    for f in os.listdir('static/invite'):
+        if f.startswith(filename):
+            os.remove(f'static/invite/{f}')
+
+@app.route('/static/alumni/list')
 def static_alumni():
     # return all files in the alumni folder
     files = []
@@ -76,7 +89,7 @@ def static_alumni():
         files.append(f)
     return jsonify(files)
 
-@app.route('/static/uploads/')
+@app.route('/static/uploads/list')
 def static_uploads():
     # return all files in the uploads folder
     files = []
@@ -84,7 +97,7 @@ def static_uploads():
         files.append(f)
     return jsonify(files)
 
-@app.route('/static/invite/')
+@app.route('/static/invite/list')
 def delete_files(folder):
     for filename in os.listdir(folder):
         if filename == 'keep':
