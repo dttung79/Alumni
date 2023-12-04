@@ -69,7 +69,7 @@ def clear():
 def delete_files(folder):
     for filename in os.listdir(folder):
         if filename == 'keep':
-            break
+            continue
         file_path = os.path.join(folder, filename)
         if os.path.isfile(file_path) and not filename.startswith('.'):
             os.remove(file_path)
