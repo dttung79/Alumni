@@ -3,6 +3,9 @@ from werkzeug.utils import secure_filename
 import hashlib
 import os
 from gen_invite import create_invitation
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -22,7 +25,7 @@ def submit_alumni():
     if request.content_length > app.config['MAX_CONTENT_LENGTH']:
         return render_template('error.html', error='File is too large. Maximum file size is 5MB.')
     # get form data
-    name, email, alumni, major, facebook = get_form_data()
+    name, email, phone, alumni, major, facebook = get_form_data()
     # check if photo part is in the request
     if 'photo' not in request.files:
         return render_template('error.html', error='No photo part in the request.')
@@ -36,6 +39,7 @@ def submit_alumni():
     try:
         invitation_file = create_invitation(filename, name)
         save_data(name, email, alumni, major, facebook, filename)
+        email_data(name, email, phone, alumni, major, facebook)
         return gen_invitation(invitation_file)
     except Exception as e:
         return render_template('error.html', error='No face detected in the portrait image.')
@@ -111,6 +115,52 @@ def gen_invitation(filename):
     content = render_template('invite.html', filename=filename)
     return content
 
+def email_data(name, email, phone, alumni, major, facebook):
+    sender_email = "alumnigreenwichhn@gmail.com"
+    receiver_email = "longnn22@fe.edu.vn"
+    password = 'ylsx tldk cltf xsps'
+    #password = "zcbm135&("
+
+    message = MIMEMultipart("alternative")
+    message["Subject"] = f"Alumni Data for {name}"
+    message["From"] = sender_email
+    message["To"] = receiver_email
+
+    text = f"""
+    Name: {name}
+    Email: {email}
+    Phone: {phone}
+    Alumni: {alumni}
+    Major: {major}
+    Facebook: {facebook}
+    """
+
+    html = f"""
+    <html>
+        <body>
+            <h2>Alumni Data</h2>
+            <p><strong>Name:</strong> {name}</p>
+            <p><strong>Email:</strong> {email}</p>
+            <p><strong>Phone:</strong> {phone}</p>
+            <p><strong>Alumni:</strong> {alumni}</p>
+            <p><strong>Major:</strong> {major}</p>
+            <p><strong>Facebook:</strong> {facebook}</p>
+        </body>
+    </html>
+    """
+
+    part1 = MIMEText(text, "plain")
+    part2 = MIMEText(html, "html")
+
+    message.attach(part1)
+    message.attach(part2)
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
+
+    
 def save_data(name, email, alumni, major, facebook, filename):
     filename_noext = filename.split('/')[-1].split('.')[0]
     with open(f'static/alumni/{filename_noext}.txt', 'w') as f:
@@ -136,11 +186,12 @@ def save_photo(photo_file, name, email):
 def get_form_data():
     name = request.form['name']
     email = request.form['email']
+    phone = request.form['phone']
     alumni = request.form['alumni']
     major = request.form['major']
     facebook = request.form['facebook']
     
-    return name, email, alumni, major, facebook
+    return name, email, phone, alumni, major, facebook
 
 def build_page(filename):
     content = render_template(filename)
